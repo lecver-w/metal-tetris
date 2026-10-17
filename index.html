@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#121317">
+  <title>金属方块 - Metal Tetris</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="apple-touch-icon" href="./icons/icon.svg">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Top Header Bar -->
+    <header class="top-bar metal-panel">
+      <div class="brand-badge">
+        <img src="./icons/icon.svg" alt="Logo" class="brand-icon">
+        <span class="brand-title">METAL TETRIS</span>
+      </div>
+      <div class="header-actions">
+        <button id="btn-pause" class="metal-btn" title="暂停">
+          <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button id="btn-settings" class="metal-btn" title="设置">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Score HUD -->
+    <div class="score-hud">
+      <div class="recessed-display">
+        <span class="display-label">SCORE</span>
+        <span id="score-val" class="display-value">0</span>
+      </div>
+      <div class="recessed-display">
+        <span class="display-label">RECORD</span>
+        <span id="high-score-val" class="display-value gold">0</span>
+      </div>
+    </div>
+
+    <!-- Main Game Arena -->
+    <div class="main-arena">
+      <!-- Left Column: Hold & Stats -->
+      <aside class="side-column">
+        <div class="slot-box metal-panel hold-box" title="点击暂存方块">
+          <span class="slot-title">HOLD</span>
+          <div class="slot-canvas-wrap">
+            <canvas id="hold-canvas"></canvas>
+          </div>
+        </div>
+        <div class="info-card metal-panel">
+          <span class="display-label">LEVEL</span>
+          <span id="level-val" class="display-value">1</span>
+        </div>
+        <div class="info-card metal-panel">
+          <span class="display-label">LINES</span>
+          <span id="lines-val" class="display-value">0</span>
+        </div>
+      </aside>
+
+      <!-- Center: Main Tetris Board -->
+      <main class="board-wrapper">
+        <canvas id="board-canvas"></canvas>
+      </main>
+
+      <!-- Right Column: Next Queue -->
+      <aside class="side-column">
+        <div class="slot-box metal-panel">
+          <span class="slot-title">NEXT</span>
+          <div class="slot-canvas-wrap tall">
+            <canvas id="next-canvas"></canvas>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Bottom Gesture Touch Guide Zone -->
+    <footer id="touch-zone" class="touch-zone">
+      <div class="touch-hint-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.09-.35-.14-.54-.14H13v-6a1.5 1.5 0 0 0-3 0v10.74l-3.44-.72c-.08-.02-.17-.03-.25-.03-.38 0-.74.15-1 .41l-.81.79 5.39 5.39c.39.38.9.6 1.44.6h6.77c.97 0 1.79-.69 1.96-1.64l.82-4.66c.14-.81-.19-1.63-.84-2.12z"/></svg>
+        纯手势感应区（整屏亦可滑控）
+      </div>
+      <div class="touch-hint-gestures">
+        <span><b>←/→滑</b> 移动</span>
+        <span><b>轻点</b> 旋转</span>
+        <span><b>慢下滑</b> 慢降</span>
+        <span><b>快甩下</b> 砸底</span>
+        <span><b>上划</b> 暂存</span>
+      </div>
+    </footer>
+
+    <!-- Pause Modal -->
+    <div id="pause-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="overlay-content">
+          <h2 class="overlay-title paused">游戏已暂停</h2>
+          <p class="overlay-stat">已自动为您保存当前棋盘进度</p>
+          <div class="modal-actions">
+            <button id="btn-restart-pause" class="metal-btn modal-btn-danger">新一局</button>
+            <button id="btn-resume" class="metal-btn modal-btn-primary">继续游戏</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameover-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="overlay-content">
+          <h2 class="overlay-title game-over">GAME OVER</h2>
+          <p class="overlay-stat">本局最终得分: <b id="final-score-val">0</b></p>
+          <div class="modal-actions">
+            <button id="btn-try-again" class="metal-btn modal-btn-primary" style="width: 100%;">再来一局</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title">游戏设置 (Settings)</h3>
+          <button id="btn-close-settings" class="close-btn">&times;</button>
+        </div>
+
+        <div class="settings-list">
+          <!-- Ghost Piece Toggle -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">辅助落点投影 (Ghost)</span>
+              <span class="setting-desc">在底部显示方块虚线阴影</span>
+            </div>
+            <label class="metal-switch">
+              <input type="checkbox" id="toggle-ghost" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Hold Piece Toggle -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">暂存槽功能 (Hold)</span>
+              <span class="setting-desc">上划手势或点击槽暂存方块</span>
+            </div>
+            <label class="metal-switch">
+              <input type="checkbox" id="toggle-hold" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- 7-Bag Modern RNG -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">7-Bag 现代发块机制</span>
+              <span class="setting-desc">开启不卡手，关闭为纯真随机</span>
+            </div>
+            <label class="metal-switch">
+              <input type="checkbox" id="toggle-7bag" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Vibration Toggle -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">触觉震动反馈 (Haptics)</span>
+              <span class="setting-desc">移动、旋转与消除时的机械震感</span>
+            </div>
+            <label class="metal-switch">
+              <input type="checkbox" id="toggle-vibration" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Sound Effects Toggle -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">金属打击音效 (Sound)</span>
+              <span class="setting-desc">代码合成金属撞击与清行音效</span>
+            </div>
+            <label class="metal-switch">
+              <input type="checkbox" id="toggle-sound" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Sensitivity Slider -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">滑动移动灵敏度</span>
+              <span class="setting-desc">数值越小越敏捷 (<span id="sensitivity-val">26</span>px)</span>
+            </div>
+            <div class="slider-container">
+              <input type="range" id="slider-sensitivity" min="16" max="42" step="2" value="26">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="btn-restart-settings" class="metal-btn modal-btn-danger">重开新一局</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Scripts -->
+  <script src="./js/tetrominoes.js"></script>
+  <script src="./js/audio.js"></script>
+  <script src="./js/vibration.js"></script>
+  <script src="./js/storage.js"></script>
+  <script src="./js/touch.js"></script>
+  <script src="./js/renderer.js"></script>
+  <script src="./js/tetris.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
