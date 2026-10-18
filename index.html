@@ -580,6 +580,156 @@ body {
   font-size: 18px;
 }
 
+
+/* =========================================================
+   Virtual Gamepad Handheld Console Styles
+   ========================================================= */
+.gamepad-container {
+  margin-top: 6px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: linear-gradient(180deg, #1b1e26 0%, #111317 100%);
+  border: 1px solid #2d3340;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.6);
+  height: 122px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.gamepad-container.hidden {
+  display: none !important;
+}
+
+.touch-zone.hidden {
+  display: none !important;
+}
+
+/* Left D-pad cluster */
+.gamepad-cluster {
+  display: grid;
+  grid-template-columns: 62px 62px;
+  grid-template-rows: 48px 48px;
+  gap: 6px;
+}
+
+.gamepad-btn {
+  background: linear-gradient(180deg, #2a2f3b 0%, #1a1c23 100%);
+  border: 1px solid #434c5e;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 3px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.04s ease, background 0.06s ease;
+  touch-action: manipulation;
+  user-select: none;
+  padding: 0;
+}
+
+.gamepad-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.gamepad-btn span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+
+.gamepad-btn:active,
+.gamepad-btn.pressed {
+  transform: translateY(2px) scale(0.96);
+  background: linear-gradient(180deg, #16181f 0%, #252a35 100%);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.9),
+    0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.gamepad-btn.span-2 {
+  grid-column: span 2;
+}
+
+/* Distinct Action Accents */
+.btn-accent-blue {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+.btn-accent-blue:active,
+.btn-accent-blue.pressed {
+  background: linear-gradient(180deg, #0369a1 0%, #075985 100%);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8), 0 0 12px rgba(56, 189, 248, 0.6);
+}
+
+.btn-accent-gold {
+  background: linear-gradient(180deg, #ca8a04 0%, #854d0e 100%);
+  border-color: #facc15;
+  color: #ffffff;
+}
+.btn-accent-gold:active,
+.btn-accent-gold.pressed {
+  background: linear-gradient(180deg, #854d0e 0%, #713f12 100%);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8), 0 0 12px rgba(250, 204, 21, 0.6);
+}
+
+.btn-accent-purple {
+  background: linear-gradient(180deg, #7e22ce 0%, #581c87 100%);
+  border-color: #c084fc;
+  color: #ffffff;
+}
+.btn-accent-purple:active,
+.btn-accent-purple.pressed {
+  background: linear-gradient(180deg, #581c87 0%, #3b0764 100%);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8), 0 0 12px rgba(192, 132, 252, 0.6);
+}
+
+/* Mode Segmented Switch */
+.mode-toggle-group {
+  display: flex;
+  background: #0f1115;
+  border: 1px solid #2d3340;
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.mode-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mode-btn.active {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
 </style>
 </head>
 <body>
@@ -727,8 +877,40 @@ body {
       </aside>
     </div>
 
-    <!-- Bottom Gesture Touch Guide Zone -->
-    <footer id="touch-zone" class="touch-zone">
+    <!-- Bottom Handheld Gamepad Console (Default) -->
+    <div id="controls-buttons" class="gamepad-container">
+      <!-- Left Cluster: Movement -->
+      <div class="gamepad-cluster">
+        <button class="gamepad-btn" data-action="left" id="btn-left" title="左移">
+          <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+        </button>
+        <button class="gamepad-btn" data-action="right" id="btn-right" title="右移">
+          <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+        </button>
+        <button class="gamepad-btn span-2" data-action="down" id="btn-down" title="软降/慢下">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+          <span>慢下落</span>
+        </button>
+      </div>
+
+      <!-- Right Cluster: Actions -->
+      <div class="gamepad-cluster">
+        <button class="gamepad-btn span-2 btn-accent-blue" data-action="rotate" id="btn-action-rotate" title="旋转">
+          <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          <span>旋转</span>
+        </button>
+        <button class="gamepad-btn btn-accent-gold" data-action="drop" id="btn-action-drop" title="硬降/砸底">
+          <svg viewBox="0 0 24 24"><path d="M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z"/></svg>
+          <span>砸底</span>
+        </button>
+        <button class="gamepad-btn btn-accent-purple" data-action="hold" id="btn-action-hold" title="暂存">
+          <span>HOLD</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Gesture Touch Guide Zone (Visible when in gesture mode) -->
+    <footer id="touch-zone" class="touch-zone hidden">
       <div class="touch-hint-title">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.09-.35-.14-.54-.14H13v-6a1.5 1.5 0 0 0-3 0v10.74l-3.44-.72c-.08-.02-.17-.03-.25-.03-.38 0-.74.15-1 .41l-.81.79 5.39 5.39c.39.38.9.6 1.44.6h6.77c.97 0 1.79-.69 1.96-1.64l.82-4.66c.14-.81-.19-1.63-.84-2.12z"/></svg>
         纯手势感应区（整屏亦可滑控）
@@ -778,6 +960,18 @@ body {
         </div>
 
         <div class="settings-list">
+          <!-- Control Mode Selection -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">操控方式选择</span>
+              <span class="setting-desc">按键防误触 / 极简手势</span>
+            </div>
+            <div class="mode-toggle-group">
+              <button id="btn-mode-buttons" class="mode-btn active" type="button">按键手柄</button>
+              <button id="btn-mode-gestures" class="mode-btn" type="button">纯手势</button>
+            </div>
+          </div>
+
           <!-- Ghost Piece Toggle -->
           <div class="setting-row">
             <div class="setting-info">
@@ -794,7 +988,7 @@ body {
           <div class="setting-row">
             <div class="setting-info">
               <span class="setting-name">暂存槽功能 (Hold)</span>
-              <span class="setting-desc">上划手势或点击槽暂存方块</span>
+              <span class="setting-desc">点击HOLD键暂存当前方块</span>
             </div>
             <label class="metal-switch">
               <input type="checkbox" id="toggle-hold" checked>
@@ -818,7 +1012,7 @@ body {
           <div class="setting-row">
             <div class="setting-info">
               <span class="setting-name">触觉震动反馈 (Haptics)</span>
-              <span class="setting-desc">移动、旋转与消除时的机械震感</span>
+              <span class="setting-desc">按键与消除时的微弱机械震感</span>
             </div>
             <label class="metal-switch">
               <input type="checkbox" id="toggle-vibration" checked>
@@ -841,8 +1035,8 @@ body {
           <!-- Sensitivity Slider -->
           <div class="setting-row">
             <div class="setting-info">
-              <span class="setting-name">滑动移动灵敏度</span>
-              <span class="setting-desc">数值越小越敏捷 (<span id="sensitivity-val">26</span>px)</span>
+              <span class="setting-name">手势滑动灵敏度</span>
+              <span class="setting-desc">仅在手势模式生效 (<span id="sensitivity-val">26</span>px)</span>
             </div>
             <div class="slider-container">
               <input type="range" id="slider-sensitivity" min="16" max="42" step="2" value="26">
@@ -1435,6 +1629,7 @@ const STORAGE_KEYS = {
 };
 
 const DEFAULT_SETTINGS = {
+  controlMode: 'buttons',   // 'buttons' (掌机按键) or 'gestures' (纯手势)
   ghostPiece: true,         // Show ghost shadow
   holdEnabled: true,        // Allow hold feature
   sevenBagRng: true,        // 7-Bag modern RNG vs True Random
@@ -1567,6 +1762,7 @@ class TouchController {
     this.hasMoved = false;
     this.isSoftDropping = false;
     this.touchActive = false;
+    this.enabled = true;
 
     this.bindEvents();
   }
@@ -1588,6 +1784,7 @@ class TouchController {
   }
 
   handleTouchStart(e) {
+    if (!this.enabled) return;
     // Only track single touch
     if (e.touches.length > 1) return;
     
@@ -1748,6 +1945,157 @@ class TouchController {
 }
 
 window.TouchController = TouchController;
+
+
+/* ===== gamepad.js ===== */
+/**
+ * Virtual Handheld Console Gamepad Controller.
+ * Provides precise physical-like touch buttons with DAS (Delayed Auto Shift)
+ * and haptic feedback to completely eliminate gesture mis-touches.
+ */
+
+class GamepadController {
+  constructor(containerElement, gameInstance) {
+    this.container = containerElement;
+    this.game = gameInstance;
+    this.enabled = true;
+
+    // DAS (Delayed Auto Shift) timers
+    this.repeatTimer = null;
+    this.repeatInterval = null;
+    this.activeAction = null;
+
+    this.bindEvents();
+  }
+
+  bindEvents() {
+    if (!this.container) return;
+
+    const buttons = this.container.querySelectorAll('[data-action]');
+    buttons.forEach((btn) => {
+      const action = btn.getAttribute('data-action');
+
+      // Touch handlers (Primary for Mobile)
+      btn.addEventListener('touchstart', (e) => {
+        if (!this.enabled) return;
+        e.preventDefault(); // Prevent ghost clicks and scrolling
+        if (window.soundController) window.soundController.ensureContext();
+        btn.classList.add('pressed');
+        this.startAction(action);
+      }, { passive: false });
+
+      btn.addEventListener('touchend', (e) => {
+        if (!this.enabled) return;
+        e.preventDefault();
+        btn.classList.remove('pressed');
+        this.stopAction(action);
+      }, { passive: false });
+
+      btn.addEventListener('touchcancel', (e) => {
+        btn.classList.remove('pressed');
+        this.stopAction(action);
+      }, { passive: false });
+
+      // Mouse handlers (For desktop testing)
+      btn.addEventListener('mousedown', (e) => {
+        if (!this.enabled || e.button !== 0) return;
+        e.preventDefault();
+        btn.classList.add('pressed');
+        this.startAction(action);
+      });
+
+      btn.addEventListener('mouseup', () => {
+        btn.classList.remove('pressed');
+        this.stopAction(action);
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btn.classList.remove('pressed');
+        this.stopAction(action);
+      });
+    });
+
+    // Global release safety
+    window.addEventListener('mouseup', () => this.clearTimers());
+    window.addEventListener('touchend', () => {
+      if (this.activeAction) this.clearTimers();
+    });
+  }
+
+  startAction(action) {
+    if (!this.game || this.game.isPaused || this.game.gameOver) return;
+
+    this.clearTimers();
+    this.activeAction = action;
+
+    // Execute immediate first step
+    this.executeAction(action);
+
+    // Discrete actions (no hold-to-repeat)
+    if (action === 'rotate' || action === 'drop' || action === 'hold') {
+      return;
+    }
+
+    // Continuous auto-repeat (DAS) for movement & soft drop
+    const initialDelay = action === 'down' ? 80 : 140;
+    const repeatInterval = action === 'down' ? 40 : 45;
+
+    this.repeatTimer = setTimeout(() => {
+      this.repeatInterval = setInterval(() => {
+        if (this.activeAction === action) {
+          this.executeAction(action);
+        } else {
+          this.clearTimers();
+        }
+      }, repeatInterval);
+    }, initialDelay);
+  }
+
+  stopAction(action) {
+    if (this.activeAction === action) {
+      this.clearTimers();
+    }
+  }
+
+  clearTimers() {
+    if (this.repeatTimer) {
+      clearTimeout(this.repeatTimer);
+      this.repeatTimer = null;
+    }
+    if (this.repeatInterval) {
+      clearInterval(this.repeatInterval);
+      this.repeatInterval = null;
+    }
+    this.activeAction = null;
+  }
+
+  executeAction(action) {
+    if (!this.game || this.game.isPaused || this.game.gameOver) return;
+
+    switch (action) {
+      case 'left':
+        this.game.moveLeft();
+        break;
+      case 'right':
+        this.game.moveRight();
+        break;
+      case 'down':
+        this.game.softDrop();
+        break;
+      case 'rotate':
+        this.game.rotate();
+        break;
+      case 'drop':
+        this.game.hardDrop();
+        break;
+      case 'hold':
+        this.game.hold();
+        break;
+    }
+  }
+}
+
+window.GamepadController = GamepadController;
 
 
 /* ===== renderer.js ===== */
@@ -2691,6 +3039,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const sliderSensitivity = document.getElementById('slider-sensitivity');
   const sensitivityVal = document.getElementById('sensitivity-val');
 
+  // Gamepad & Control Elements
+  const controlsButtons = document.getElementById('controls-buttons');
+  const btnModeButtons = document.getElementById('btn-mode-buttons');
+  const btnModeGestures = document.getElementById('btn-mode-gestures');
+
   // 3. Initialize Core Game & Components
   const game = new TetrisGame();
   const renderer = new MetallicRenderer(boardCanvas, holdCanvas, nextCanvas);
@@ -2698,6 +3051,36 @@ window.addEventListener('DOMContentLoaded', () => {
   // Both the main arena (board) and the bottom touch zone support gestures
   const touchZone = new TouchController(mainArena, game);
   const touchZoneBottom = new TouchController(touchArea, game);
+  const gamepad = new GamepadController(controlsButtons, game);
+
+  // Switch between Handheld Button Mode and Pure Gesture Mode
+  function setControlMode(mode) {
+    const isButtons = mode === 'buttons';
+    if (controlsButtons) {
+      controlsButtons.classList.toggle('hidden', !isButtons);
+    }
+    if (touchArea) {
+      touchArea.classList.toggle('hidden', isButtons);
+    }
+    if (btnModeButtons) {
+      btnModeButtons.classList.toggle('active', isButtons);
+    }
+    if (btnModeGestures) {
+      btnModeGestures.classList.toggle('active', !isButtons);
+    }
+
+    // In button mode: disable gestures on arena to completely prevent mis-touches
+    touchZone.enabled = !isButtons;
+    touchZoneBottom.enabled = !isButtons;
+    gamepad.enabled = isButtons;
+
+    window.storageManager.saveSettings({ controlMode: mode });
+
+    // Smoothly re-scale the canvas to fit the new layout height
+    setTimeout(() => {
+      renderer.resize();
+    }, 50);
+  }
 
   // 4. Load Settings into UI
   function syncSettingsUI() {
@@ -2709,6 +3092,9 @@ window.addEventListener('DOMContentLoaded', () => {
     if (toggleVibration) toggleVibration.checked = s.vibrationEnabled;
     if (sliderSensitivity) sliderSensitivity.value = s.sensitivity;
     if (sensitivityVal) sensitivityVal.textContent = s.sensitivity;
+
+    // Apply control mode
+    setControlMode(s.controlMode || 'buttons');
 
     // Apply to audio and vibration controllers
     if (window.soundController) window.soundController.enabled = s.soundEnabled;
@@ -2752,6 +3138,14 @@ window.addEventListener('DOMContentLoaded', () => {
       if (sensitivityVal) sensitivityVal.textContent = val;
       window.storageManager.saveSettings({ sensitivity: val });
     });
+  }
+
+  // Control Mode Selectors
+  if (btnModeButtons) {
+    btnModeButtons.addEventListener('click', () => setControlMode('buttons'));
+  }
+  if (btnModeGestures) {
+    btnModeGestures.addEventListener('click', () => setControlMode('gestures'));
   }
 
   // 5. Update HUD Displays
